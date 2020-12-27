@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Phasmo Photo Randomizer</title>
+	<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container mx-auto px-2">
+		<div class="flex justify-between items-center py-4 bg-white-900">
+		  <div class="flex-shrink-0 cursor-pointer">
+		    <span class="md:text-3xl text-black-200 font-semibold">Phasmophobia Photo Randomizer</span>
+		  </div>
+		</div>
+		
+		<div class="grid grid-cols-1 md:grid-cols-2">
+			<div class="mb-10">
+				<form class="mb-3">
+					<div>
+						<label for="lighters">Include Lighters in Rolls</label>
+						<input type="checkbox" name="lighters" id="lighters">
+					</div>
+					<div>
+						<label for="tripod">Include Tripod in Rolls</label>
+						<input type="checkbox" name="tripod" id="tripod" checked="checked">
+					</div>
+					<div>
+						<label for="head_cam">Include Head Mounted Camera</label>
+						<input type="checkbox" name="head_cam" id="head_cam">
+					</div>
+					<div>
+						<label for="repeat">Repeat Same Items</label>
+						<input type="checkbox" name="repeat" id="repeat">
+					</div>
+				</form>	
+				<button class="btn rounded-sm p-2 bg-green-400" onclick="addItem()">Add Item</button>
+			</div>
+			
+			<div>
+				<h3> Accquired Items </h3>
+				<div class="grid grid-cols-3 gap-4" id="accquired_items">
+					
+				</div>			
+			</div>
+
+		</div>
+
+		<div class="w-full mx-auto">
+			<h1 class="my-2 md:text-3xl">Rules</h1>
+			<p>Welcome to the Phasmophobia Photo Randomizer tool. The rules of the randomizer are very simple. You first begin with no items except for cameras. Every time you take a photo with a label (e.g. interaction) then you roll an item by clicking the "Add Item" button. Optionally, you can also receive additional items for completing tasks on the white board. 
+			</p>
+			<p>When you receive an item, you gain access to all of that particular item. For example, if you roll the Ghost Writing Book, you may bring both into the map. Additionally, with basic settings, items come with the items that have support items needed. For example, if you receive a smudge stick, you may use a lighter as well. For more info on these settings see below.</p>
+
+			
+			<h1 class="my-2 md:text-3xl">Optional Rules</h1>
+			<p> A few additional optional rules are represented in the form above. In a basic game of photo randomizer you will get the following items together</p>
+			<ul>
+				<li>Smudge Sticks come with a lighter</li>
+				<li>Candles come with a lighter</li>
+				<li>Cameras come with a tripod</li>
+			</ul>
+
+			<p>In order to add additional challenge, a player may check "Include Lighters in Rolls" and/or "Include Tripod in Rolls" to remove these paired items and roll them separately</p>
+
+			<br />
+
+			<p>In standard photo randomizers, you will receive all of an item for rolling it once, so this tool will not roll the same item multiple times. To add additional challenge, a player may check "Repeate Same Items" to turn this feature off. When this is checked, players should only take one of an item when that item is rolled.</p>
+
+			<br />
+			<p>If a player is doing a photo randomizer solo, then they may wish to not include Head Mounted Cameras in the rolled items since these are completely useless for solor players. A player may check "Include Head Mounted Camera" to include this in the list of items. This toggle is mostly useful for multiple players doing a photo randomizer together, however it can also be used to essentially add a blank to a solo player's prize pool</p>
+
+			<br />
+			<p>The last and most essential rule to photo randomizer is to just have fun. Photo randomizers add a lot of variety to a game that has limitless variety already. If you find yourself having too much trouble, try starting with a light source for free, or 2 randomly rolled items before you go into the map. Any number of variations are completely viable, and as long as you are having fun, you are playing photo randomizers correctly! Happy Hunting</p>
+
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+		valid_items = [
+			"EMF READER",
+			"FLASHLIGHT",
+			"CANDLE",
+			"UV LIGHT",
+			"CRUCIFIX",
+			"VIDEO CAMERA",
+			"SPIRIT BOX",
+			"SALT",
+			"SMUDGE STICKS",
+			"STRONG FLASHLIGHT",
+			"MOTION SENSOR",
+			"SOUND SENSOR",
+			"THERMOMETER",
+			"SANITY PILLS",
+			"GHOST WRITING BOOK",
+			"INFRARED LIGHT SENSOR",
+			"PAROBOLIC MIC",
+			"GLOWSTICK"
+		]
+
+		accquired_items = []
+
+		function buildLists() {
+			possible_items = []
+
+			include_lighters  = document.getElementById("lighters").checked
+			repeat_items      = document.getElementById("repeat").checked
+			include_head_cams = document.getElementById("head_cam").checked
+			include_tripod    = document.getElementById("tripod").checked
+
+			if (include_head_cams && (!accquired_items.includes("HEAD MOUNTED CAMERA") || repeat_items))
+				possible_items.push("HEAD MOUNTED CAMERA")
+			if (include_lighters && (!accquired_items.includes("LIGHTER") || repeat_items))
+				possible_items.push("LIGHTER")
+			if (include_lighters && (!accquired_items.includes("TRIPOD") || repeat_items))
+				possible_items.push("TRIPOD")
+			
+			for (var i = valid_items.length - 1; i >= 0; i--) {
+				if(accquired_items.includes(valid_items[i]) && !repeat_items)
+					continue
+				possible_items.push(valid_items[i])
+			}
+
+			return possible_items
+
+		}
+
+		function addItem() {
+			possible_items = buildLists()
+
+			random_item = possible_items[Math.floor(Math.random() * possible_items.length)];
+
+			if (random_item === undefined) {
+				alert("No more valid items");
+				return 0;
+			} 
+
+			accquired_items.push(random_item)
+
+			item_list = document.getElementById("accquired_items")
+		  	var li = document.createElement("div")
+		  	li.className = "bg-blue-900 p-1 text-white text-center rounded-md"
+			li.appendChild(document.createTextNode(random_item))
+			item_list.appendChild(li)
+
+		}
+	</script>
+</body>
+</html>
