@@ -31,7 +31,14 @@
 						<label for="repeat">Repeat Same Items</label>
 						<input type="checkbox" name="repeat" id="repeat">
 					</div>
-				</form>	
+					<div>
+						<label for="repeat">Include Weak Flashlight</label>
+						<input type="checkbox" name="weak" id="weak">
+					</div>
+					<div>
+						<label for="repeat">Include Strong Flashlight</label>
+						<input type="checkbox" name="strong" id="strong" checked>
+					</div>				</form>	
 				<button class="btn rounded-sm p-2 bg-green-400" onclick="addItem()">Add Item</button>
 			</div>
 			
@@ -78,7 +85,6 @@
 	<script type="text/javascript">
 		valid_items = [
 			"EMF READER",
-			"FLASHLIGHT",
 			"CANDLE",
 			"UV LIGHT",
 			"CRUCIFIX",
@@ -86,7 +92,6 @@
 			"SPIRIT BOX",
 			"SALT",
 			"SMUDGE STICKS",
-			"STRONG FLASHLIGHT",
 			"MOTION SENSOR",
 			"SOUND SENSOR",
 			"THERMOMETER",
@@ -102,20 +107,26 @@
 		function buildLists() {
 			possible_items = []
 
-			include_lighters  = document.getElementById("lighters").checked
-			repeat_items      = document.getElementById("repeat").checked
-			include_head_cams = document.getElementById("head_cam").checked
-			include_tripod    = document.getElementById("tripod").checked
+			include_lighters          = document.getElementById("lighters").checked
+			repeat_items              = document.getElementById("repeat").checked
+			include_head_cams         = document.getElementById("head_cam").checked
+			include_tripod            = document.getElementById("tripod").checked
+			include_strong_flashlight = document.getElementById("weak").checked
+			include_weak_flashlight   = document.getElementById("strong").checked
 
 			if (include_head_cams && (!accquired_items.includes("HEAD MOUNTED CAMERA") || repeat_items))
 				possible_items.push("HEAD MOUNTED CAMERA")
 			if (include_lighters && (!accquired_items.includes("LIGHTER") || repeat_items))
 				possible_items.push("LIGHTER")
-			if (include_lighters && (!accquired_items.includes("TRIPOD") || repeat_items))
+			if (include_tripod && (!accquired_items.includes("TRIPOD") || repeat_items))
 				possible_items.push("TRIPOD")
+			if (include_weak_flashlight && (!accquired_items.includes("FLASHLIGHT") || repeat_items))
+				possible_items.push("FLASHLIGHT")
+			if (include_strong_flashlight && (!accquired_items.includes("STRONG FLASHLIGHT") || repeat_items))
+				possible_items.push("STRONG FLASHLIGHT")
 			
 			for (var i = valid_items.length - 1; i >= 0; i--) {
-				if(accquired_items.includes(valid_items[i]) && !repeat_items)
+				if(!repeat_items && accquired_items.includes(valid_items[i]))
 					continue
 				possible_items.push(valid_items[i])
 			}
